@@ -44,7 +44,7 @@
 
 Solr przechowuje dane w kolekcjach, podobnie jak bazy danych w tabelach
 
-``curl --request POST \
+`curl --request POST \
 --url http://localhost:8983/api/collections \
 --header 'Content-Type: application/json' \
 --data '{
@@ -53,7 +53,7 @@ Solr przechowuje dane w kolekcjach, podobnie jak bazy danych w tabelach
     "numShards": 1,
     "replicationFactor": 1
   }
-}``
+}`
 
 ### Defining schema
 
