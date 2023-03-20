@@ -38,16 +38,14 @@
 
 ### Running Solr
 
-<code>
-bin/solr -c -z localhost:9983 -p 8984
+<code>bin/solr -c -z localhost:9983 -p 8984
 </code>
 
 ### Creating collection
 
 Solr przechowuje dane w kolekcjach, podobnie jak bazy danych w tabelach
 
-<code>
-curl --request POST \
+<code>curl --request POST \
 --url http://localhost:8983/api/collections \
 --header 'Content-Type: application/json' \
 --data '{
@@ -63,8 +61,7 @@ curl --request POST \
 
 Schema definiuje pola jakie zawiera document
 
-<code>
-curl --request POST \
+<code>curl --request POST \
   --url http://localhost:8983/api/collections/techproducts/schema \
   --header 'Content-Type: application/json' \
   --data '{
@@ -84,8 +81,7 @@ curl --request POST \
 
 ### Indexing documents
 
-<code>
-curl --request POST \
+<code>curl --request POST \
   --url 'http://localhost:8983/api/collections/techproducts/update' \
   --header 'Content-Type: application/json' \
   --data '  [
@@ -121,12 +117,10 @@ curl --request POST \
 
 Po wyslaniu danych do Solr trzeba wykonac commit, inaczej dane nie beda dostepne do wyszukiwania
 
-<code>
-curl -X POST -H 'Content-type: application/json' -d '{"set-property":{"updateHandler.autoCommit.maxTime":15000}}' http://localhost:8983/api/collections/techproducts/config
+<code>curl -X POST -H 'Content-type: application/json' -d '{"set-property":{"updateHandler.autoCommit.maxTime":15000}}' http://localhost:8983/api/collections/techproducts/config
 </code>
 
 ### Make basic query
 
-<code>
-TODO
+<code>TODO
 </code>
