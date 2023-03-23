@@ -34,99 +34,14 @@
 - Solr moze wykorzystac tez wyniki poprzedniego zapytania do kolejnego, bardziej precyzynjego wyszukiwania [MoreLikeThis](https://solr.apache.org/guide/solr/latest/query-guide/morelikethis.html)
 - Koncowa odpowiedz z Solra jest generowana przez [Response Writer](https://solr.apache.org/guide/solr/latest/query-guide/response-writers.html)
 
-## Basic use of Solr
+## Clusters
 
-### Running Solr
-
-```
-bin/solr -c -z localhost:9983 -p 8984
-```
-
-### Creating collection
-
-Solr przechowuje dane w kolekcjach, podobnie jak bazy danych w tabelach
-
-```
-curl --request POST \
---url http://localhost:8983/api/collections \
---header 'Content-Type: application/json' \
---data '{
-  "create": {
-    "name": "techproducts",
-    "numShards": 1,
-    "replicationFactor": 1
-  }
-}
-```
-
-### Defining schema
-
-Schema definiuje pola jakie zawiera document
-
-```
-curl --request POST \
-  --url http://localhost:8983/api/collections/techproducts/schema \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "add-field": [
-    {"name": "name", "type": "text_general", "multiValued": false},
-    {"name": "cat", "type": "string", "multiValued": true},
-    {"name": "manu", "type": "string"},
-    {"name": "features", "type": "text_general", "multiValued": true},
-    {"name": "weight", "type": "pfloat"},
-    {"name": "price", "type": "pfloat"},
-    {"name": "popularity", "type": "pint"},
-    {"name": "inStock", "type": "boolean", "stored": true},
-    {"name": "store", "type": "location"}
-  ]
-}'
-```
-
-### Indexing documents
-
-```
-curl --request POST \
-  --url 'http://localhost:8983/api/collections/techproducts/update' \
-  --header 'Content-Type: application/json' \
-  --data '  [
-  {
-    "id" : "978-0641723445",
-    "cat" : ["book","hardcover"],
-    "name" : "The Lightning Thief",
-    "author" : "Rick Riordan",
-    "series_t" : "Percy Jackson and the Olympians",
-    "sequence_i" : 1,
-    "genre_s" : "fantasy",
-    "inStock" : true,
-    "price" : 12.50,
-    "pages_i" : 384
-  }
-,
-  {
-    "id" : "978-1423103349",
-    "cat" : ["book","paperback"],
-    "name" : "The Sea of Monsters",
-    "author" : "Rick Riordan",
-    "series_t" : "Percy Jackson and the Olympians",
-    "sequence_i" : 2,
-    "genre_s" : "fantasy",
-    "inStock" : true,
-    "price" : 6.49,
-    "pages_i" : 304
-  }
-]'
-```
-
-### Commit changes
-
-Po wyslaniu danych do Solr trzeba wykonac commit, inaczej dane nie beda dostepne do wyszukiwania
-
-```
-curl -X POST -H 'Content-type: application/json' -d '{"set-property":{"updateHandler.autoCommit.maxTime":15000}}' http://localhost:8983/api/collections/techproducts/config
-```
-
-### Make basic query
-
-```
-TODO
-```
+- Node to pojedynczy serwer Solr
+- Cluster to grupa node-ow Solr (serwerow)
+- Istnieja dwa rodzaje zarzadzania klastrem:
+  -  SolrCloud Mode - wykorzystuje ZooKeeper do zarzadzania klastrami. ZooKeeper sledzie kazdy stan kazdego Core-a w kazdym Node-ie. W tym trybie pliki konfiguracyjne znajduja sie w ZooKeeper, a nie w kazdym node-ie. Zadanie (zapytania lub indeksowania) moze przyjsc do dowolnego klastra, a ZooKeeper sam przekierowuje je do odpowiedniego node-a i core
+  -  User-Managed Mode - zarzadzanie klastrami odbywa sie za pomoca lokalnych skryptow. Ten sposob wydaje sie kiepski, bo wszystko trzeba recznie konfigurowac i jest tego duzo
+- Shard to fragment indeksu. Solr pozwala dzielic indeks na fragmenty i umieszczac je w osobnych node-ach (cos jak partycje). W trybie cloud indeks jest automatycznie dzielony jesli sa przynajmniej 2 shard-y, a w manual trzeba pisac skrypty
+- Replica to kopia indeksu badz kopia shard-a, jesli jest skonfigurowany. Jest wykorzystywana podczas indeksowania, albo awarii glownej repliki (leader-a) lub przy duzej liczbie zapytan
+- Leader to glowna replika, do ktorej wprowadza sie dane do indeksowania i z niej sa tworzone pozostale repliki (Followers)
+- Core to poprostu replika (Leader i Followers). Node moze zawierac wiele Core-ow
