@@ -39,7 +39,7 @@
 - Node to pojedynczy serwer Solr
 - Cluster to grupa node-ow Solr (serwerow)
 - Istnieja dwa rodzaje zarzadzania klastrem:
-  -  SolrCloud Mode - wykorzystuje ZooKeeper do zarzadzania klastrami. ZooKeeper sledzie kazdy stan kazdego Core-a w kazdym Node-ie. W tym trybie pliki konfiguracyjne znajduja sie w ZooKeeper, a nie w kazdym node-ie. Zadanie (zapytania lub indeksowania) moze przyjsc do dowolnego klastra, a ZooKeeper sam przekierowuje je do odpowiedniego node-a i core
+  -  SolrCloud Mode - wykorzystuje ZooKeeper do zarzadzania klastrami. ZooKeeper sledzi stan kazdego Core-a w kazdym Node-ie. W tym trybie pliki konfiguracyjne znajduja sie w ZooKeeper, a nie w kazdym node-ie. Zadanie (zapytania lub indeksowania) moze przyjsc do dowolnego klastra, a ZooKeeper sam przekierowuje je do odpowiedniego node-a i core
   -  User-Managed Mode - zarzadzanie klastrami odbywa sie za pomoca lokalnych skryptow. Ten sposob wydaje sie kiepski, bo wszystko trzeba recznie konfigurowac i jest tego duzo
 - Shard to fragment indeksu. Solr pozwala dzielic indeks na fragmenty i umieszczac je w osobnych node-ach (cos jak partycje). W trybie cloud indeks jest automatycznie dzielony jesli sa przynajmniej 2 shard-y, a w manual trzeba pisac skrypty
 - Replica to kopia indeksu badz kopia shard-a, jesli jest skonfigurowany. Jest wykorzystywana podczas indeksowania, albo awarii glownej repliki (leader-a) lub przy duzej liczbie zapytan
