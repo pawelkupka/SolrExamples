@@ -15,8 +15,8 @@ public class PersonsController : Controller
         _personGenerator = personGenerator;
     }
 
-    [HttpGet("Persons")]
-    public IEnumerable<Person> Index()
+    [HttpGet("All")]
+    public IEnumerable<Person> All()
     {
         for (var i = 0; i < 10000; i++)
         {

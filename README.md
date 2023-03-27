@@ -54,3 +54,7 @@
 2. Zrobic Cluster Solr Cloud z 3 node-ami i 3 shard-ami i kolekcja persons. Kazdy shard niech ma 3 Core-y typu NRT
 3. Zindeksowac dane z API Persons w Solr
 4. Wyprobowac rozne rodzaje queries
+
+Ad.1. Zrobione za pomoca biblioteki Bogus. Endpoint url "http://localhost:5155/Persons/All"
+Ad.2. Po kolei:
+- Uruchomienie Solr w trybie cloud. ```bin/solr.cmd -e cloud```
