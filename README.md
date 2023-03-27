@@ -45,3 +45,12 @@
 - Replica to kopia indeksu badz kopia shard-a, jesli jest skonfigurowany. Jest wykorzystywana podczas indeksowania, albo awarii glownej repliki (leader-a) lub przy duzej liczbie zapytan
 - Leader to glowna replika, do ktorej wprowadza sie dane do indeksowania i z niej sa tworzone pozostale repliki (Followers)
 - Core to poprostu replika (Leader i Followers). Node moze zawierac wiele Core-ow
+
+
+
+## Exercise
+
+1. Zrobic w API generator osob za pomoca biblioteki Bogus, ktory wygeneruje powiedzmy 10000 osob
+2. Zrobic Cluster Solr Cloud z 3 node-ami i 3 shard-ami i kolekcja persons. Kazdy shard niech ma 3 Core-y typu NRT
+3. Zindeksowac dane z API Persons w Solr
+4. Wyprobowac rozne rodzaje queries
