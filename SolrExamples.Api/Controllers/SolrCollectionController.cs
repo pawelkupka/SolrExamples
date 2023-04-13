@@ -10,7 +10,7 @@ public class SolrCollectionController : ControllerBase
     private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
     private readonly ILogger<SolrCollectionController> _logger;
-    private const string collection = "techproducts";
+    private const string collection = "persons";
 
     public SolrCollectionController(HttpClient httpClient, IConfiguration configuration, ILogger<SolrCollectionController> logger)
     {
@@ -23,14 +23,15 @@ public class SolrCollectionController : ControllerBase
     /// CreateCollection
     /// </summary>
     /// <returns></returns>
-    [HttpPost("CreateCollection-1")]
-    public async Task CreateCollection1()
+    [HttpPost("CreateCollection")]
+    public async Task CreateCollection()
     {
         var uriString = $"api/collections";
         var jsonString = @"{
                       'create': {
                         'name': 'techproducts',
-                        'numShards': 1,
+                        'numShards': 3,
+                        'shards': 'shard-person-1,shard-person-2,shard-person-3'
                         'replicationFactor': 1
                       }
                     }";
@@ -41,8 +42,8 @@ public class SolrCollectionController : ControllerBase
     /// DefineSchema
     /// </summary>
     /// <returns></returns>
-    [HttpPost("DefineSchema-2")]
-    public async Task DefineSchema2()
+    [HttpPost("DefineSchema")]
+    public async Task DefineSchema()
     {
         var uriString = $"api/collections/{collection}/schema";
         var jsonString = @"{
@@ -65,8 +66,8 @@ public class SolrCollectionController : ControllerBase
     /// IndexMultipleData
     /// </summary>
     /// <returns></returns>
-    [HttpPost("IndexMultipleData-3")]
-    public async Task IndexMultipleData3()
+    [HttpPost("IndexMultipleData")]
+    public async Task IndexMultipleData()
     {
         var uriString = $"api/collections/{collection}/update";
         var jsonString = @"[
@@ -103,8 +104,8 @@ public class SolrCollectionController : ControllerBase
     /// CommitChanges
     /// </summary>
     /// <returns></returns>
-    [HttpPost("CommitChanges-4")]
-    public async Task CommitChanges4()
+    [HttpPost("CommitChanges")]
+    public async Task CommitChanges()
     {
         var uriString = $"api/collections/{collection}/config";
         var jsonString = @"{'set-property': { 'updateHandler.autoCommit.maxTime':15000 } }";
@@ -112,36 +113,54 @@ public class SolrCollectionController : ControllerBase
     }
 
     /// <summary>
+    /// CreateShard
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("CreateShard")]
+    public async Task CreateShard()
+    {
+        var uriString = $"api/collections/{collection}/shards";
+        var jsonString = @"
+                      {
+                        'create':{
+                          'shard':'myShard1'
+                        }
+                      }";
+        await PostAsync(uriString, jsonString);
+    }
+
+
+    /// <summary>
     /// QueryAll
     /// </summary>
     /// <returns></returns>
-    [HttpPost("QueryAll-5")]
-    public async Task<string> QueryAll5()
+    [HttpPost("QueryAll")]
+    public async Task<string> QueryAll()
     {
         var uriString = @$"solr/{collection}/select?indent=true&q=*:*";
-        return await GetAsync(uriString);
+        return await QueryAsync(uriString);
     }
 
     /// <summary>
     /// QueryValue
     /// </summary>
     /// <returns></returns>
-    [HttpPost("QueryValue-6")]
-    public async Task<string> QueryValue6()
+    [HttpPost("QueryValue")]
+    public async Task<string> QueryValue()
     {
         var uriString = @$"solr/{collection}/select?indent=true&q=hardcover";
-        return await GetAsync(uriString);
+        return await QueryAsync(uriString);
     }
 
     /// <summary>
     /// QueryFieldValue
     /// </summary>
     /// <returns></returns>
-    [HttpPost("QueryFieldValue-7")]
-    public async Task<string> QueryFieldValue7()
+    [HttpPost("QueryFieldValue")]
+    public async Task<string> QueryFieldValue()
     {
         var uriString = @$"solr/{collection}/select?indent=true&q=hardcover&fl=id";
-        return await GetAsync(uriString);
+        return await QueryAsync(uriString);
     }
 
     /// <summary>
@@ -150,7 +169,7 @@ public class SolrCollectionController : ControllerBase
     /// <param name="uriString"></param>
     /// <param name="jsonString"></param>
     /// <returns></returns>
-    private async Task<string> GetAsync(string uriString)
+    private async Task<string> QueryAsync(string uriString)
     {
         try
         {
